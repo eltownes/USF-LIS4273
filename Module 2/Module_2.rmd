@@ -66,8 +66,8 @@ provides a clue what the underlying values may look like.
 <br>
 The coefficient of variation can be used to compare the datasets:
 $CV = (\frac{S}{\bar x} ) \cdot 100$  
-\ $CV_{set1} =$ `r sprintf("%1.2f%%", (sd(set1)/mean(set1)*100) ) `  
-\ $CV_{set2} =$ `r sprintf("%1.2f%%", (sd(set2)/mean(set2)*100) ) `  
+\ $CV_{set1} =$ `r sprintf("%1.2f%%", (sd(set1)/mean(set1)) * 100 ) `  
+\ $CV_{set2} =$ `r sprintf("%1.2f%%", (sd(set2)/mean(set2)) * 100 ) `  
 <br>
 While both datasets have the same standard deviation, they differ relative
 to their mean.  
