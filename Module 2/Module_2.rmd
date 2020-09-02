@@ -1,0 +1,72 @@
+---
+output:
+    html_document:
+        code_folding: show
+---
+<br>
+
+### Set environment
+```{r message=0}
+library(modeest)
+library(tidyr)
+library(kableExtra)
+```
+<br>
+
+### Define 2 sets of data
+```{r}
+set1 <- c(10,2,3,2,4,2,5)
+set2 <- c(20,12,13,12,14,12,15)
+```
+<br>
+
+### Central Tendency: compute mean, medium, mode 
+```{r}
+ct_set1 <- c( mean(set1), median(set1), mfv(set1) )
+ct_set2 <- c( mean(set2), median(set2), mfv(set2) )
+```
+<br>
+
+### Variation: compute range, interquartile, variance, & standard deviation
+```{r}
+
+v_set1 <- round( c(range(set1), IQR(set1), var(set1), sd(set1) ), 2 )
+v_set2 <- round( c(range(set2), IQR(set2), var(set2), sd(set2) ), 2 )
+```
+<br>
+
+### Results: Central Tendency
+```{r}
+ct <- as.data.frame(rbind(ct_set1,ct_set2) )
+colnames(ct) <- c("Mean","Median","Mode")
+# print
+ct %>% kbl(align = "ccc") %>%
+  kable_styling(full_width = F)
+```
+<br>
+
+### Results: Variation
+```{r}
+v1 <- as.data.frame( rbind(v_set1,v_set2) )
+# combine the 2 columns of 'range' into 1
+v2 <- v1 %>%
+    unite("tmp", V1:V2, sep="-")
+colnames(v2) <- c("Range","Interquartile","Variance", "Standard Deviation")
+# print
+v2 %>% kbl(align = "cccc") %>%
+  kable_styling(full_width = F)
+```
+<br>
+
+### Discussion
+Central Tendency and Variation provide 2 ways to describe data.
+The datasets' measure of center show the difference in their
+numeric values - there's a clear difference. The measures of variation broadly show the degree to which they vary; it hints at little variation - only the 
+range
+provides a clue what the underlying values may look
+like.
+<br><br>
+
+### GitHub
+Get the related file(s) on <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%202">Git Me</a>
+<br><br>
