@@ -5,4 +5,4 @@ Taught at the University of South Florida by Dr. Alon Friedman during the Fall 2
 
 Blog lives at https://et-lis4273.blogspot.com/ .
 
-* Module 2:
+* Module 2: Descriptive Statistics using R
