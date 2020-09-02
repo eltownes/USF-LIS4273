@@ -60,13 +60,19 @@ v2 %>% kbl(align = "cccc") %>%
 
 ### Discussion
 Central Tendency and Variation provide 2 ways to describe data.
-The datasets' measure of center show the difference in their
-numeric values - there's a clear difference. The measures of variation broadly show the degree to which they vary; it hints at little variation - only the 
-range
-provides a clue what the underlying values may look
-like.
+The measures of center show the datasets' difference in their
+numeric values. The measures of variation broadly show the degree to which they vary; it seems to hints at little variation - only the range
+provides a clue what the underlying values may look like.  
+<br>
+The coefficient of variation can be used to compare the datasets:
+$CV = (\frac{S}{\bar x} ) \cdot 100$  
+\ $CV_{set1} =$ `r sprintf("%1.2f%%", sd(set1)/mean(set1) ) `  
+\ $CV_{set2} =$ `r sprintf("%1.2f%%", sd(set2)/mean(set2) ) `  
+<br>
+While both datasets have the same standard deviation, they differ relative
+to their mean.  
 <br><br>
 
 ### GitHub
-Get the related file(s) on <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%202">Git Me</a>
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%202">Git Me</a>
 <br><br>
