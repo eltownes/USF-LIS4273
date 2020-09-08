@@ -1,0 +1,106 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("dplyr", "ggplot2", "glue")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+### Load assigned dataset
+```{r message=0}
+boardingScreeners <- c(287,243,237,227,247,264,247,247,251,254,
+                       277,303,285,254,280,264,261,292,248,253)
+securityViolations <- c(271,261,230,225,236,252,243,247,238,274,
+                        256,305,273,234,261,265,241,292,228,252)
+secData <- tibble( boardingScreeners,securityViolations )
+```
+<br>
+
+### Create EDA scatter plot
+```{r}
+plot(secData)
+```
+<br>
+The plot shows a clear positive relationship: security violations (y) increase as
+more screening agents (x) are used. One would expect any calculated 
+correlation value to be positive and nearer to one (1) than zero (0).
+<br>
+
+### Calculate Pearson’s Sample correlation coefficient
+```{r}
+corPearson <- cor.test(secData$boardingScreeners, secData$securityViolations,
+                       method="pearson")
+corPearson
+```
+<br>
+
+### Calculate Spearman’s Rank Coefficient
+```{r}
+corSpearman <- cor.test(secData$boardingScreeners, secData$securityViolations,
+                        method="spearman")
+corSpearman
+```
+<br>
+
+### Describe the association between boarding screeners and security violations
+Correlation measures both the strength of association between two
+variables and the direction of that relationship. The scale ranges from
+-1 to +1 and the result is expressed as a decimal value. A value of 0 typically
+means that there is no relationship.  
+<br>
+The Pearson correlation is the most cited measure when continuous and linearly related variables are involved. For the above dataset, the r value is 0.84 which 
+shows a strong positive correlation between screeners and violations.  
+<br>
+The Spearman correlation is a non-parametric test. In essence it shows a rank
+correlation which can be between both continuous or ordinal variables. In
+the case of continuous data, the raw values are ranked - they become 
+rank-ordered variables. For the dataset, the Spearman correlation comes
+in at 0.76. Like the Pearson score, it shows a strong and positive association.  
+<br>
+While a graph for a Pearson correlation will show a constant rate of change, 
+the Spearman describes a monotonic relationship where the rate of change
+can vary. Lastly, as the ref points out, when the linearity of the data is in question it may be best to opt for the Spearman correlation.  
+<br>
+
+Ref:  
+[Towards Data Science - Clearly explained: Pearson vs Spearman Correlation Coefficient](https://towardsdatascience.com/clearly-explained-pearson-v-s-spearman-correlation-coefficient-ada2f473b8#:~:text=The%20fundamental%20difference%20between%20the,with%20monotonic%20relationships%20as%20well.)
+<br>
+
+### Prep report
+```{r message=0 }
+# prep label
+corLabel <- glue("
+    Correlation Coeficients
+    Pearson: {round(corPearson$estimate,2)}
+    Spearman: {round(corSpearman$estimate,2)}
+    ")
+ggplot(secData, aes(boardingScreeners,securityViolations) ) +
+    geom_point() +
+    geom_smooth(method="lm", se=0, aes(colour="lm")) +
+    geom_smooth(method="loess", se=0, aes(colour="loess")) +
+    geom_label(label = corLabel, aes(240,295) ) +
+    labs(title = "Airport Security Screening", subtitle = "(1988-1999)",
+         x = "Screeners", y = "Violations  ", colour = "Model") +
+    theme_classic() + 
+    theme( plot.title = element_text(hjust=0.5),
+           plot.subtitle = element_text(hjust=0.5),
+           axis.title.x = element_text(vjust=-1),
+           axis.title.y = element_text(angle = 0, vjust=0.5)
+           )
+```
+
+
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%203">Git Me</a>
+<br><br>
+
