@@ -1,0 +1,118 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("dplyr")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+### <span style="color:rgb(219,228,66)">Contingency Table</span>
+<br>
+
+#### Create table
+```{r }
+data1 <- matrix( c(10,20,20,40), nrow=2, byrow=1,
+                 dimnames=list( c("A","A1"), c("B","B1") ) )
+table1 <- as.table( data1 )
+table1
+```
+<br>
+
+#### Calculate relative frequencies
+```{r }
+propTable <- prop.table(table1)
+propTable
+```
+<br>
+
+#### Find probabilities for 'A' and 'B'
+
+* P(A) : sum the table row  
+`r pA <- propTable %>% rowSums() %>% .["A"] ` <!--store-->
+` pA <- propTable %>% rowSums() %>% .["A"] ` = `r pA`
+<br>
+    
+* P(B) : sum the table column  
+`r pB <- propTable %>% colSums() %>% .["B"] ` <!--store-->
+` pB <- propTable %>% colSums() %>% .["B"] ` = `r pB`
+<br>
+
+* P(A and B) : is already on the rel freq table as $P(A) \cap P(B)$ but we can
+still calculate  
+` pA * pB ` = `r pA * pB `
+<br>
+
+* P(A or B) : P(A) + P(B) - P(A and B)  
+` pA + pB - (pA * pB) ` = `r pA + pB - (pA * pB) `
+<br>
+
+* P(A or B) disjoint : P(A) + P(B)  
+` pA + pB ` = `r pA + pB `  
+<br><br>
+
+
+### <span style="color:rgb(219,228,66)">Bayes Theorem</span>
+
+Jane is getting married tomorrow, at an outdoor ceremony in the desert. In recent years, it has rained only 5 days each year. Unfortunately,
+the weatherman has predicted rain for tomorrow. When it actually rains, the weatherman correctly forecasts rain 90% of the time. When it
+doesn't rain, he incorrectly forecasts rain 10% of the time.  
+
+**What is the probability that it will rain on the day of Jane's wedding?**  
+<br>
+
+#### Discussion
+
+Calculate the probabilities we know. 
+( R - rain, NR - no rain, F - weatherman forecast )  
+
+* Relative  
+    * P(R) : ` pR <- 5/365 ` = `r pR <- 5/365 ` `r pR `  
+    * P(NR) : ` pNR <- 360/365 ` = `r pNR <- 360/365 ` `r pNR `  
+* Conditional  
+    * P(F|R) : 0.9 ` pFR <- 0.9 ` `r pFR <- 0.9 `  
+    * p(F|NR) : 0.1 ` pFNR <- 0.1 ` `r pFNR <- 0.1 `  
+<br>
+
+Proportional probability would suggest that there's a `r round(pR,2)` or 
+`r sprintf("%1.2f%%", pR*100) ` chance that it will rain on Jane's wedding day.  
+<br>
+Given the weatherman's prediction history, we can use Bayes to
+update our initial probability - the prior. We now want to predict the 
+probability of rain based on the new forecast information - the 
+posterior : $P(R|F)$  
+
+<br>
+Using Bayes :
+$\large P(R|F) = \frac{P(F|R) \cdot P(R)}{\sum P(F)}$ = 
+$\large \frac{P(F|R) \cdot P(R)} {P(F|R) \cdot P(R) + P(F|NR) \cdot P(NR)}$  
+<br>
+
+`r b <- pR*pFR/(pR*pFR+pNR*pFNR) `
+Substituting results in :
+$\large \frac{`r pFR ` \cdot `r pR `}
+    {`r pFR ` \cdot `r pR ` + `r pFNR ` \cdot `r pNR `}$ = `r b`  
+<br>
+
+Interpretation:  
+
+* The weatherman's forecast increased our probability of rain from `r sprintf("%1.2f%%", pR*100) ` to `r sprintf("%1.2f%%", b*100) `. A 
+big increase but overall, there's a low probability of rain on 
+Jane's wedding day.  
+* While the weatherman's rain prediction rate is high, the fact that it only
+rains a few days per year, significantly lowers his **daily** probability
+accuracy. Even if the weatherman had an accurate rain forecast rate of 99%,
+the probability of rain on the wedding day would still be only about
+0.58 or 58% - slightly better than a coin toss.
+<br><br>
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%204">Git Me</a>
+<br><br>
+
