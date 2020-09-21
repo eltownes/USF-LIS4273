@@ -8,3 +8,4 @@ Blog lives at https://et-lis4273.blogspot.com/ .
 * Module 2: Descriptive Statistics using R
 * Module 3: Bivariate Analysis
 * Module 4: Probability Theory
+* Module 5: Random Variables & Probability Distributions

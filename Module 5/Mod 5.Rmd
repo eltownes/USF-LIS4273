@@ -1,0 +1,138 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("dplyr")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+### <span style="color:rgb(219,228,66)">Part A</span>
+<br>
+
+
+#### Create dataset
+```{r }
+data1 <- c(8,14,16,10,11) ; data1
+```
+<br>
+
+(a) ##### Compute population mean & standard deviation
+```{r }
+pop_mu <- mean(data1)
+pop_sd <- sd(data1)
+```
+
+Mean is `r pop_mu ` and the standard deviation is `r pop_sd `  
+<br>
+
+```{r }
+fun_calc <- function(trials){
+
+    
+# ---------- get samples
+    
+# sampling and replicate
+s1_rs <- replicate( trials, sample(data1,2,replace=1) )
+# mean & sd
+s1_xbar <- apply(s1_rs,2,mean)
+s1_sd <- apply(s1_rs,2,sd)
+# function for standard error of the mean
+fun_sem <- function(x) sd(x)/sqrt(length(x))
+s1_sem<- apply(s1_rs, 2, fun_sem)
+# format table
+s1_tbl <- as.data.frame( rbind(s1_rs, s1_xbar, s1_sd, s1_sem) )
+colnames(s1_tbl) <- c( paste("Trial ", seq(trials) ) )
+rownames(s1_tbl) <- c("observation 1","observation 2","xbar", "std dev",
+                      "std error")
+# view filter
+if(trials <= 4){
+    viewTbl <- s1_tbl
+} else {
+    test <- data.frame("-----")
+    colnames(test)<-   "-----"
+    viewTbl <- bind_cols(s1_tbl[, 1:2], test, s1_tbl[, (trials-1):trials] )
+}
+# view table
+print(viewTbl)
+
+
+# ---------- roll up
+
+# calculate sampling values - population std error mean is NA
+pop_sem <- NA
+rs_xbar <- mean(s1_rs)
+rs_sd <- sd(s1_rs)
+rs_sem <- sd(s1_rs) / sqrt(length(s1_rs))
+# assemble table
+pop_rollUp <- as.data.frame( rbind(pop_mu, pop_sd, pop_sem) )
+rs_rollUp <- as.data.frame( rbind(rs_xbar, rs_sd, rs_sem) )
+rollup <- bind_cols(pop_rollUp, rs_rollUp  )
+colnames(rollup) <- c("Population","Samples")
+rownames(rollup) <- c("mean/xbar","std dev","std err")
+# view table
+print(rollup)
+}
+```
+
+`r trials <- 1`  
+(b) ##### Random sample(s) of 2 from the population - **`r trials` trial(s)**
+(c) ##### Compute the mean & standard deviations
+(d) ##### Comparing the population and the samples
+```{r message=0}
+fun_calc(trials)
+```
+<br>
+
+
+`r trials <- 100`  
+(b) ##### Random sample(s) of 2 from the population - **`r trials` trial(s)**
+(c) ##### Compute the mean & standard deviations
+(d) ##### Comparing the population and the samples
+```{r message=0}
+fun_calc(trials)
+```
+<br>
+
+
+### <span style="color:rgb(219,228,66)">Part B</span>
+<br>
+
+
+**Suppose that the sample size n = 100 and the population proportion p = 0.95.**
+`r n <- 100; p <- 0.95 `  
+<br>
+
+(a) Does the sample proportion p have approximately a normal distribution? Explain.
+
+**No.**
+
+One rule states: "the sample size is considered large enough if the expected number of successes and failures are both at least 10: 
+$np \ge 10$ and $n(1-p) \ge 10$  .
+
+Given the data : $np \ge 10$ = `r n*p >= 10 ` 
+    and $n(1-p) \ge 10$ = `r n*(1-p) >= 10 `  
+<br>
+
+
+(b) What is the smallest value of n for which the sampling distribution of p is approximately normal?  
+
+**201.**
+
+Solving each sub-rule for n means
+n $\ge$ `r 10/p ` and n $\ge$ `r 10/(1-p)` .
+
+
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%205">Git Me</a>
+<br><br>
+
