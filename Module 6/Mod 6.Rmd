@@ -1,0 +1,91 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("dplyr")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+### <span style="color:rgb(219,228,66)">Part A</span>
+<br>
+
+A publishing company has just published a new textbook. Before the company 
+decides the price at which to sell this textbook, it want to know the average 
+price of all such textbooks in the market. The research department at the 
+company took a sample of 25 comparable textbooks and collected information on 
+their prices. This information produced a mean price of $145 for this sample. 
+It is known that the standard deviation of the prices of all such textbooks 
+is $35 and the population of such prices is **normal**.  
+<br>
+**Construct a 90% confidence interval for the mean price of all such 
+textbooks.**  
+<br>
+
+In trying to find the CI given the **normal distribution assumptions**, we have
+the population standard deviation (35) and sample mean (145)
+and sample size (25).  
+
+For CI using: 
+$\Large \bar{x} \ \pm z \ \frac{alpha}{2} \cdot \frac{\sigma}{sqrt(n)}$
+
+$\bar{x} = 145 \ ->$ `xbar` `r xbar <- 145`  
+$alpha = 0.10 \ ->$ `alpha` `r alpha <- 0.10`  
+$\sigma = 35 \ ->$ `sd` `r sd <- 35`  
+$n = 25 \ ->$ `n` `r n <- 25`  
+<br>
+
+In R: 
+`xbar +- qnorm( alpha/2 ) * ( sd/sqrt(n) ) `  
+`r p1 <- xbar + qnorm( alpha/2 ) * ( sd/sqrt(n) )` Price 1 = `r p1`  
+`r p2 <- xbar - qnorm( alpha/2 ) * ( sd/sqrt(n) )` Price 2 = `r p2`  
+
+The 90% CI is (\$`r round(p1-0.5,0)` , \$`r round(p2+0.5,0)` ).
+
+
+<br>
+
+### <span style="color:rgb(219,228,66)">Part B</span>
+<br>
+
+According to Mobes Services Inc. an individual checking his/her account at 
+major U.S banks via cellphones cost the banks between $350 and $650. A recent random sample of 600 such checking account produced a mean annual cost of 
+$500 to major U.S banks. Assume that the standard deviation of annual costs 
+to major US banks of all such checking account is $40.  
+<br>
+**Make a 99% confidence interval for the current mean annual cost to major banks all such checking account.**  
+<br>
+
+Assuming a normal distribution, we have the population standard 
+deviation (40) and sample mean (500) and sample size (600).  
+
+For CI using: 
+$\Large \bar{x} \ \pm z \ \frac{alpha}{2} \cdot \frac{\sigma}{sqrt(n)}$
+
+$\bar{x} = 500 \ ->$ `xbar` `r xbar <- 500`  
+$alpha = 0.01 \ ->$ `alpha` `r alpha <- 0.01`  
+$\sigma = 40 \ ->$ `sd` `r sd <- 40`  
+$n = 600 \ ->$ `n` `r n <- 600`  
+<br>
+
+In R: 
+`xbar +- qnorm( alpha/2 ) * ( sd/sqrt(n) ) `  
+`r p1 <- xbar + qnorm( alpha/2 ) * ( sd/sqrt(n) )` Price 1 = `r p1`  
+`r p2 <- xbar - qnorm( alpha/2 ) * ( sd/sqrt(n) )` Price 2 = `r p2`  
+
+The 99% CI is (\$`r round(p1-0.5,0)` , \$`r round(p2+0.5,0)` ).
+
+
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%206">Git Me</a>
+<br><br>
+

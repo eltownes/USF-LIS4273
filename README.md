@@ -9,3 +9,4 @@ Blog lives at https://et-lis4273.blogspot.com/ .
 * Module 3: Bivariate Analysis
 * Module 4: Probability Theory
 * Module 5: Random Variables & Probability Distributions
+* Module 6: Sampling & Confidence Interval Estimation
