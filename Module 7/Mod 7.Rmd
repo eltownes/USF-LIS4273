@@ -1,0 +1,162 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+#env <- c("dplyr")
+#lapply(env, library, character.only = 1)
+```
+<br>
+
+### <span style="color:rgb(219,228,66)">Part I</span>
+<br>
+**Confidence Interval estimation questions when the mean is known.**  
+
+For CI using: 
+$\Large \bar{x} \ \pm z \ \frac{alpha}{2} \cdot \frac{\sigma}{sqrt(n)}$  
+<br>
+
+(1) A 95% Confidence Interval:
+<br>
+<br>
+$\bar{x} = 85 \ ->$ `xbar` `r xbar <- 85`  
+$alpha = 0.05 \ ->$ `alpha` `r alpha <- 0.05`  
+$\sigma = 8 \ ->$ `sd` `r sd <- 8`  
+$n = 64 \ ->$ `n` `r n <- 64`  
+<br>
+In R: 
+`xbar +- qnorm( alpha/2 ) * ( sd/sqrt(n) ) `  
+`r v1 <- xbar + qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 1 = `r v1`  
+`r v2 <- xbar - qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 2 = `r v2`  
+<br>
+The 95% CI is ( `r round(v1-0.5,0)` , `r round(v2+0.5,0)` ).  
+<br>
+
+(2) A 99% Confidence Interval:
+<br>
+<br>
+$\bar{x} = 125 \ ->$ `xbar` `r xbar <- 125`  
+$alpha = 0.01 \ ->$ `alpha` `r alpha <- 0.01`  
+$\sigma = 24 \ ->$ `sd` `r sd <- 24`  
+$n = 36 \ ->$ `n` `r n <- 36`  
+<br>
+In R: 
+`xbar +- qnorm( alpha/2 ) * ( sd/sqrt(n) ) `  
+`r v1 <- xbar + qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 1 = `r v1`  
+`r v2 <- xbar - qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 2 = `r v2`  
+<br>
+The 99% CI is ( `r round(v1-0.5,0)` , `r round(v2+0.5,0)` ).  
+<br>
+
+(3) The manager of a supply store wants to estimate the actual amount of 
+paint contained in 1-gallon cans purchased from a nationally known 
+manufacturer. It is known from the manufacturer's specification sheet that standard deviation of the amount of paint is equal to 0.02 gallon. A Random
+sample of 50 cans is selected and the sample mean amount of paint per
+1 gallon is 0.99 gallon.  
+<br>
+* a) Set up a 99% Confidence Interval:
+<br>
+<br>
+$\bar{x} = 0.99 \ ->$ `xbar` `r xbar <- 0.99`  
+$alpha = 0.01 \ ->$ `alpha` `r alpha <- 0.01`  
+$\sigma = 0.02 \ ->$ `sd` `r sd <- 0.02`  
+$n = 50 \ ->$ `n` `r n <- 50`  
+<br>
+In R: 
+`xbar +- qnorm( alpha/2 ) * ( sd/sqrt(n) ) `  
+`r v1 <- xbar + qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 1 = `r v1`  
+`r v2 <- xbar - qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 2 = `r v2`  
+The 99% CI is ( `r round(v1,3)` , `r round(v2,3)` ).  
+<br>
+* b) The manager does not have the right to complain because the sample 
+mean (0.99) is within the 99% confidence interval (0.983 - 0.997).  
+<br><br>
+
+### <span style="color:rgb(219,228,66)">Part II</span>
+<br>
+**Confidence Interval estimation questions when the mean is unknown.**  
+
+For CI using: 
+$\Large \bar{x} \ \pm z \ \frac{alpha}{2} \cdot \frac{\sigma}{sqrt(n)}$  
+<br>
+
+(4) A stationery store wants to estimate the mean retail value of 
+greeting cards that has in its inventory. A random sample of 20 greeting
+cards indicates an average value of $1.67 and standard deviation of $0.32.  
+<br>
+* a) Set up a 95% Confidence Interval assuming a normal distribution:
+<br>
+<br>
+$\bar{x} = 1.67 \ ->$ `xbar` `r xbar <- 1.67`  
+$alpha = 0.05 \ ->$ `alpha` `r alpha <- 0.05`  
+$\sigma = 0.32 \ ->$ `sd` `r sd <- 0.32`  
+$n = 20 \ ->$ `n` `r n <- 20`  
+<br>
+In R: 
+`xbar +- qnorm( alpha/2 ) * ( sd/sqrt(n) ) `  
+`r v1 <- xbar + qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 1 = `r v1`  
+`r v2 <- xbar - qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 2 = `r v2`  
+<br>
+The 95% CI is ( `r round(v1-0.5,2)` , `r round(v2+0.5,2)` ).  
+<br>
+* b) Obtaining an estimate for the mean value of all greeting cards in the
+store's inventory could be useful in estimating the anticipated revenue.  
+<br><br>
+
+
+### <span style="color:rgb(219,228,66)">Part III</span>
+<br>
+**Determine sample size.**  
+
+Using: 
+$\Large n = (\frac{ z \ \frac{alpha}{2} \cdot \sigma} E) ^2$  
+
+In R: $\Large n= (\frac{qnorm( alpha/2 ) \cdot \sigma}{E}) ^2$  
+<br>
+
+(5) If you want to be 95% confident of estimating the population mean to 
+within a sampling error of ± 5 and standard deviation is assumed to be 
+equal 15, what sample size is required?  
+<br>
+
+$alpha = 0.05 \ ->$ `alpha` `r alpha <- 0.05`  
+$\sigma = 15 \ ->$ `sd` `r sd <- 15`  
+$E = 5 \ ->$ `E` `r E <- 5`  
+<br>
+
+`r n <- ((qnorm( alpha/2 ) * sd) / E) ^ 2`
+$\Large n =$ `r n`  
+Sample size required is `r round(n+0.5)`
+<br>
+
+### <span style="color:rgb(219,228,66)">Part IV</span>
+<br>
+**Hypothesis Statement.**  
+
+Source:
+http://usatoday30.usatoday.com/news/health/2004-10-12-vioxx-cover_x.htm  
+
+Key verbiage from the article:
+
+* "...those who took Vioxx were more likely to suffer a heart attack or 
+sudden cardiac death than those who took Celebrex, Vioxx's main rival."  
+* "But there was no possibility that you could discern a heart attack due to Vioxx from a heart attack not due to Vioxx," he says.  
+
+There appears to be conflicting information or the presence of confounding 
+variables that requires a thorough analysis drug reactions/interactions.  
+
+Sample hypothesis to test:  
+Null: Taking Vioxx can increase risk of cardiac death.  
+Alternative: Taking Vioxx has no effect on risk of cardiac death.
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%207">Git Me</a>
+<br><br>
+
