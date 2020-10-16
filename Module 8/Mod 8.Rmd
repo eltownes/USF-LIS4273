@@ -1,0 +1,189 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("dplyr","readxl","tidyr","corrgram")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+### <span style="color:rgb(219,228,66)">Part I</span>
+<br>
+**The director of manufacturing at a cookie factory needs to determine whether 
+a new machine is producing a particular type of cookie according to the 
+manufacturer's specifications, which indicate that cookies should have a 
+mean breaking strength of 70 and standard deviation of 3.5 pounds. 
+A sample of 49 of cookies reveals a mean breaking strength of 69.1 pounds.**  
+
+**1 - Hypothesis**
+
+null hypothesis: the sample of 69.1 lbs is within the manufacturer's
+specifications.  
+alternative hypothesis:  the sample of 69.1 lbs is NOT within the 
+manufacturer's specifications.  
+
+This will be a two-tailed test because any sample mean can be either more or 
+less than the population mean of 70 lbs with a standard deviation of 3.5
+pounds - testing whether the cookies are either too soft or too hard.
+
+$H_{0}$ : $\mu$ = 69.1  
+$H_{a}$ : $\mu \ne$ 69.1  
+<br>
+"If z is in the upper tail (z > 0), compute the probability that z is greater than or equal to the value of the test statistic. If z is in the lower tail
+(z < 0), compute the probability that z is less than or
+equal to the value of the test statistic. Double the tail area to obtain
+the p–value."  
+<br>
+
+**2 - Within acceptable limits?**
+
+Is there evidence that the machine is not meeting the manufacturer's specifications for average strength? Use a 0.05 level of significance.  
+
+$\bar{x} = 69.1 \ ->$ `xbar` `r xbar <- 69.1`  
+$\mu = 70 \ ->$ `mu` `r mu <- 70`  
+$\sigma = 3.5 \ ->$ `sd` `r sd <- 3.5`  
+$n = 49 \ ->$ `n` `r n <- 49` 
+$\alpha = 0.05$ `alpha` `r alpha <- 0.05`
+
+$\Large z = \frac {\bar{x}-\mu}{\sigma / \sqrt {n}} =$
+$\Large \frac{`r xbar` - `r mu`}{`r sd` / \sqrt `r n`} =$
+`r z <- (xbar-mu) / (sd/sqrt(n) )` $`r z`$  
+<br>
+
+With z = `r z`, the two-tailed p-value is `r pval <- 2 * pnorm(z)` `r pval`  
+
+Rejection?  
+p-value $\leq$ alpha ? ---> `r pval` $\leq$ `r alpha` = **`r pval <= alpha`**  
+<br>
+**Do NOT reject $H_{0}$**, the sample of `r xbar` lbs is within the manufacturer's
+specifications.  
+<br>
+
+**3 - What if...**
+
+the standard deviation were specified as 1.75 pounds.  
+
+$\sigma = 1.75 \ ->$ `sd` `r sd <- 1.75`  
+
+$\Large z = \frac {\bar{x}-\mu}{\sigma / \sqrt {n}} =$
+$\Large \frac{`r xbar` - `r mu`}{`r sd` / \sqrt `r n`} =$
+`r z <- (xbar-mu) / (sd/sqrt(n) )` $`r z`$  
+<br>
+
+With z = `r z`, the two-tailed p-value is `r pval <- 2 * pnorm(z)` `r pval`  
+
+Rejection?  
+p-value $\leq$ alpha ? ---> `r pval` $\leq$ `r alpha` = **`r pval <= alpha`**  
+<br>
+**Do reject $H_{0}$**, the sample of `r xbar` lbs is not within the manufacturer's
+specifications.  
+<br>
+
+**4 - What if...**
+
+the sample mean were 69 pounds and the standard deviation is 3.5 lbs.  
+
+$\bar{x} = 69 \ ->$ `xbar` `r xbar <- 69`  
+$\sigma = 3.5 \ ->$ `sd` `r sd <- 3.5`  
+
+$\Large z = \frac {\bar{x}-\mu}{\sigma / \sqrt {n}} =$
+$\Large \frac{`r xbar` - `r mu`}{`r sd` / \sqrt `r n`} =$
+`r z <- (xbar-mu) / (sd/sqrt(n) )` $`r z`$  
+<br>
+
+With z = `r z`, the two-tailed p-value is `r pval <- 2 * pnorm(z)` `r pval`  
+
+Rejection?  
+p-value $\leq$ alpha ? ---> `r pval` $\leq$ `r alpha` = **`r pval <= alpha`**  
+<br>
+**Do reject $H_{0}$**, the sample of `r xbar` lbs is NOT within the manufacturer's
+specifications.  
+<br>
+
+### <span style="color:rgb(219,228,66)">Part II</span>
+<br>
+**If x̅ = 85, σ = 8, and n = 64, set up 95% confidence interval estimate 
+of the population mean μ.**  
+
+For CI using: 
+$\Large \bar{x} \ \pm z \ \frac{alpha}{2} \cdot \frac{\sigma}{sqrt(n)}$  
+<br>
+
+The 95% Confidence Interval:
+<br>
+<br>
+$\bar{x} = 85 \ ->$ `xbar` `r xbar <- 85`  
+$alpha = 0.05 \ ->$ `alpha` `r alpha <- 0.05`  
+$\sigma = 8 \ ->$ `sd` `r sd <- 8`  
+$n = 64 \ ->$ `n` `r n <- 64`  
+<br>
+In R: 
+`xbar +- qnorm( alpha/2 ) * ( sd/sqrt(n) ) `  
+`r v1 <- xbar + qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 1 = `r v1`  
+`r v2 <- xbar - qnorm( alpha/2 ) * ( sd/sqrt(n) )` Value 2 = `r v2`  
+<br>
+The 95% CI is ( `r round(v1-0.5,0)` , `r round(v2+0.5,0)` ).  
+<br>
+
+
+<br>
+
+### <span style="color:rgb(219,228,66)">Part III</span>
+<br>
+
+The girls and boys data sets:
+```{r message=FALSE}
+girls <- ( read_excel("Mod 8 dataset.xls", n_max = 5 ) )
+boys <- ( read_excel("Mod 8 dataset.xls", skip = 7 ) )
+
+# tidy the data
+colnames(girls) <- c("category","n1","n2","n3")
+girls$id <- "girls"
+girls <- girls %>%
+    select(id,everything() )
+colnames(boys) <- c("category","n1","n2","n3")
+boys$id <- "boys"
+boys <- boys %>%
+    select(id,everything() )
+```
+
+```{r}
+girls
+boys
+```
+
+
+```{r }
+# prep for cor test
+gd <- girls %>%
+    slice_tail(n=1) %>%
+    select(n1,n2,n3) 
+bd <- boys %>%
+    slice_tail(n=1) %>%
+    select(n1,n2,n3)
+c <- cor( as.numeric(gd) , as.numeric(bd) )
+
+```
+The correlation coefficient on the totals is `r c`  
+<br>
+
+The highly correlated correlogram:
+```{r }
+# prep for corrgram
+all <- rbind( slice_head(girls,n=4) , slice_head(boys,n=4) )
+cg <- corrgram( all, order=TRUE, lower.panel=panel.ellipse,
+  upper.panel=panel.pts, text.panel=panel.txt )
+```
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%208">Git Me</a>
+<br><br>
+
