@@ -12,3 +12,4 @@ Blog lives at https://et-lis4273.blogspot.com/ .
 * Module 6: Sampling & Confidence Interval Estimation
 * Module 7: Confidence Interval Estimation And Intro to hypothesis testing
 * Module 8: Hypothesis Testing & Correlation Analysis
+* Module 9: T-Test for Independent Samples

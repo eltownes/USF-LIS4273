@@ -1,0 +1,102 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("dplyr","tibble")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+<br>
+The dataset is from a study whose research hypothesis was:  
+
+* "There will be a difference between boys and girls in the number of times
+they raise their hand in class."  
+
+For the purposes of this study, boys were coded as 2 on gender and
+girls were coded as 1.  
+
+The dataset:  
+```{r }
+classroom <- tribble(
+    ~gender, ~handup,
+    1,9,
+    2,11,
+    2,1,
+    1,8,
+    2,2,
+    2,6,
+    1,3,
+    2,4,
+    1,8,
+    2,3,
+    1,10,
+    2,6
+)
+classroom
+```
+<br>
+
+Compute t-test.  
+```{r }
+boys <- classroom %>%
+    filter( gender == 1 ) %>%
+    select( -gender )
+girls <- classroom %>%
+    filter( gender == 2 ) %>%
+    select( -gender )
+res <- t.test( boys , girls )
+res
+```
+<br>
+
+1] The means:  
+x, boys: `r res[["estimate"]][["mean of x"]] `  
+y, girls: `r res[["estimate"]][["mean of y"]] `  
+<br>
+
+2] Degree of freedom:  
+`r res[["parameter"]][["df"]] `  
+<br>
+
+3] T-test statistic:  
+`r res[["statistic"]][["t"]] `  
+<br>
+
+4] P-value:  
+`r pVal <- res[["p.value"]] ` `r pVal `  
+<br>
+
+5] At alpha value of 0.05  
+Is p-value $\le$ 0.05? `r pVal <= 0.05 `  
+Do **NOT** reject the null hypothesis. There is a difference.  
+<br>
+
+6] What critical value would your obtained t-test value have to exceed
+to be significant at the 0.01 level? - assume a two-tailed test.  
+
+Formula: `qt( 0.01/2 , 'degrees of freedom' , lower.tail=FALSE) `  
+
+```{r }
+df <- res$parameter
+t_crit <- qt( 0.01/2 , df , lower.tail = FALSE )
+```
+
+The critical value is `r t_crit `.  
+Given a two-tailed test, the critical values would have 
+to be: $\lt$ `r t_crit*-1 ` and $\gt$ `r t_crit `.
+
+
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%209">Git Me</a>
+<br><br>
+
