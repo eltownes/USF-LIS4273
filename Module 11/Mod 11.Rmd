@@ -1,0 +1,100 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("tidyverse")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+**The Hotels data table**
+```{r }
+hotels <- tribble(
+    ~Same_Hotel_Again,~Beachcomber, ~Windsurfer,
+    "Yes",163,154,
+    "No",64,108
+)
+hotels
+```
+<br>
+
+**Chi-Square test for the difference between two proportions:**  
+<br>
+$H_{0}$ : $\pi_1$ = $\pi_2$ (The satisfaction of Beachcomber guests is 
+equal to those of Windsurfer guests)  
+$H_{a}$ : $\pi_1$ $\ne$ $\pi_2$ (The satisfaction of Beachcomber guests is NOT
+equal to those of Windsurfer guests)  
+<br>
+
+**Prep data and calculate.**  
+```{r }
+tabHotel <- hotels[,2:3]
+tabHotel
+
+chiHotel <- chisq.test( tabHotel )
+chiHotel
+```
+<br>
+
+**Assuming a significance of 0.05**  
+<br>
+
+The $x^2_{0.05}$ with 1 degree of freedom equals ...
+```{r }
+zAlpha <- qchisq( c(0.05), df=1, lower.tail=FALSE)
+zAlpha
+```
+<br>
+
+**Analyze the data**
+```{r }
+ggplot( data.frame(x = 0:10) , aes(x = x) ) +
+    stat_function(fun = df,
+                  args = list( df1=1 , df2=Inf ),
+                  col = "red"
+                  ) +
+    geom_vline( xintercept=zAlpha ) +
+        geom_label( aes(label="alpha", x=zAlpha, y=1.5 ) )  +
+    geom_vline( xintercept=chiHotel$statistic ) +
+        geom_label( aes( label="stat", x=chiHotel$statistic, y=1.5 ) ) + 
+    labs(title = "Chi-Square Test",
+         x = "x", y = "y") +
+    theme( plot.title = element_text(hjust=0.5),
+           axis.title.x = element_text(vjust=-1),
+           axis.title.y = element_text(angle = 0, vjust=0.5)
+        )
+
+```
+
+**Decision Rule:**  
+If $x^2_{STAT} \gt x^2_{\alpha}$ reject $H_{0}$ otherwise,
+do not reject $H_{0}$  
+<br>
+
+We can reject the null hypothesis.  
+At a significance level of 0.05, the satisfaction of Beachcomber guests is NOT equal to those 
+of Windsurfer guests.  
+
+```{r }
+pvtHotel <- pivot_longer( hotels , cols=c(Beachcomber,Windsurfer) )
+
+ggplot( pvtHotel, aes(x = Same_Hotel_Again, fill = value ) ) +
+    geom_bar( aes(weight = value) ) +
+    facet_wrap( ~name )
+```
+<br>  
+
+By examining the bar graph of the provided data and at a significance level of 0.05, we can conclude that the Beachcomber is definitely the preferred hotel.
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%2011">Git Me</a>
+<br><br>
+
