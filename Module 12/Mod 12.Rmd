@@ -1,0 +1,87 @@
+
+---
+output:
+    html_document:
+        code_folding: hide 
+---
+<br>
+
+### Set environment
+```{r message=0, results='hide'}
+env <- c("tidyverse","forecast")
+lapply(env, library, character.only = 1)
+```
+<br>
+
+**The credit card charges data**  
+<br>
+A quick EDA of the data.
+```{r }
+visa <- c(31.9,27,31.3,31,39.4,40.7,42.3,49.5,45,50,50.9,58.5,39.4,
+            36.2,40.5,44.6,46.8,44.7,52.2,54,48.8 ,55.8,58.7,63.4)
+visaTS <- ts(visa, frequency=12, start=c(2018,1) )
+visaTS
+summary( visaTS )
+autoplot( visaTS )
+```
+<br>
+
+**Apply smoothing**  
+<br>
+
+We will use simple exponential smoothing by using the HoltWinters function.
+The EDA hinted at an intuitive seasonal pattern where more charges occur during
+the typical holiday seasons so, we'll "turn on" the gamma argument.  
+
+```{r message=FALSE}
+visaXMA <- HoltWinters(visaTS, beta=FALSE, gamma=TRUE)
+visaXMA
+
+autoplot( visaXMA$x, size=1 ) +
+    autolayer( visaXMA$fitted, color="Red" ) +
+    labs(title = "Visa Charges",
+         subtitle = "(With HoltWinter Seasonal Smoothing)",
+         x = "Year", y = "Charges $" ) +
+    theme_classic() + 
+    theme(legend.position = "none") +
+    theme( plot.title = element_text(hjust=0.5),
+           plot.subtitle = element_text(hjust=0.5, color="Red"),
+           axis.title.x = element_text(vjust=-1),
+           axis.title.y = element_text(angle = 0, vjust=0.5)
+           )
+
+```
+<br>
+
+**Forecasting**  
+<br>
+
+Let's forecast the next 12 months using a confidence level of 50%, 75%, 
+and 90%.  
+
+```{r}
+visaFC <- forecast(visaXMA, h=12, level=c(50,75,90) )
+visaFC
+
+autoplot( visaFC ) +
+    labs(title = "Charge Prediction for 2020",
+         subtitle = "(50%, 75%, 90%)", x = "Year", y = "Charges $" ) +
+    theme_classic() + 
+    theme(legend.position = "none") +
+    theme( plot.title = element_text(hjust=0.5),
+           plot.subtitle = element_text(hjust=0.5, color="Blue"),
+           axis.title.x = element_text(vjust=-1),
+           axis.title.y = element_text(angle = 0, vjust=0.5)
+           )
+
+```
+
+
+
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%2012">Git Me</a>
+<br><br>
+

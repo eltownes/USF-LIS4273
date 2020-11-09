@@ -15,3 +15,4 @@ Blog lives at https://et-lis4273.blogspot.com/ .
 * Module 9: T-Test for Independent Samples
 * Module 10: Introduction to ANOVA
 * Module 11: Chi Square Test
+* Module 12: Time Series
