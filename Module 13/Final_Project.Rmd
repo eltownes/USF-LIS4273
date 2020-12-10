@@ -1,0 +1,212 @@
+
+---
+output:
+  html_document:
+    code_folding: hide
+  pdf_document: default
+  word_document: default
+---
+<br>
+
+### Set environment
+```{r message=FALSE, results='hide'}
+env <- c("tidyverse","lubridate")
+lapply(env, library, character.only = 1)
+
+```
+
+```{r message=FALSE, results='hide', warning=FALSE, cache=TRUE}
+# DOWNLOAD THE CSV FILE FROM THE ACTION CENTER SITE AND IMPORT IT HERE.
+stPeteData <- read_csv("C:/Users/ericl/Downloads/St._Petersburg_Action_Center_Data.csv")
+```
+<br>
+
+**Abstract - The dataset is from the St. Petersburg [FL] Action Center which 
+can be found at: 
+https://stat.stpete.org/Improving-Liviability/St-Petersburg-Action-Center-Data/qdms-3kn3 .  
+This analysis uses the file that was downloaded on 10 December 2020. The 
+dataset starts around mid 2014 and it is updated daily.
+There are a number of ways to analyze this rich '144244 x 24' dataset
+including potential options for spatial, imagery, and text analysis.
+This brief analysis will consider a multi-year comparison (ANOVA) for the 
+issue labelled "Codes Compliance." It is one of 31 issues that 
+the Action Center tracks and
+it is also to most common one for St. Petersburg.  
+At least for the issue of
+"Codes Compliance", the center is doing quite well.**
+<br><br>
+
+### Exploratory Data Analysis  
+
+A quick look of the dataset.
+
+```{r }
+glimpse( stPeteData )
+```
+<br>
+
+One of the variables being tracked is `Issue Type`. Let's see how many
+unique values there are, what they are, and how many of each - also sorted.
+```{r }
+stPeteData %>%
+    group_by( `Issue Type` ) %>%
+    summarise( Count = n(), .groups = 'drop' ) %>%
+    arrange( desc(Count) )
+```
+<br>
+
+Another variable being tracked is `Days open`. It would be interesting to
+consider it as a performance metric for the action center. Let's look at just 
+`Codes Compliance`. Lots of data points so, we have to summarise a 
+little: by averaging the ticket resolution time for each day. So, if on one 
+particular day, 28 tickets were opened, what is the average time before all
+28 tickets were closed?
+```{r message=0}
+eda1 <- stPeteData %>%
+    filter( `Issue Type` == "Codes Compliance" ) %>%
+    filter( !(is.na(`Days open`)) ) %>%
+    mutate( Ticket_Created = as_date ( mdy_hms(`Ticket Created Date/Time`) ) ) %>%
+    group_by( Ticket_Created, .groups = 'drop' ) %>%
+    summarise( Days_Open = mean(`Days open`), .groups = 'drop' )
+ggplot( eda1, aes(x=Ticket_Created, y=Days_Open) ) +
+    geom_jitter(shape=1,size=1) +
+    geom_smooth(method="lm", se=0, aes(colour="lm") ) +
+    geom_smooth(method="loess", se=0, aes(colour="loess") ) +
+    labs(title = "Codes Compliance",
+         subtitle = "Average duration of open tickets") +
+    theme( axis.title.y = element_text(angle = 0, vjust=0.5) )
+```
+<br>
+
+A clear downtrend for open ticket duration Also,...looks quite flat in 2020
+let's zoom in a bit starting mid 2019.
+```{r message=0}
+eda2 <- eda1 %>%
+    filter( Ticket_Created >= as_date( "2019-06-15" ) )
+ggplot( eda2, aes(x=Ticket_Created, y=Days_Open) ) +
+    geom_jitter(shape=1,size=1) +
+    geom_smooth(method="lm", se=0, aes(colour="lm") ) +
+    geom_smooth(method="loess", se=0, aes(colour="loess") ) +
+    labs(title = "Codes Compliance",
+         subtitle = "Average duration of open tickets") +
+    theme( axis.title.y = element_text(angle = 0, vjust=0.5) )
+```
+<br><br>
+
+Okay, we see that most likely COVID had quite an impact on the center's
+response to at least `Codes Compliance` tickets. Regardless, the center's 
+average daily response time for "Codes Compliance" tickets was already
+on a decline starting at least around early 2016.  
+
+Could this be due to a decrease in ticket submission?
+
+```{r message=0}
+eda3 <- stPeteData %>%
+    filter( `Issue Type` == "Codes Compliance" ) %>%
+    select( `Ticket Created Date/Time` ) %>%
+    mutate( Ticket_Created = as_date ( mdy_hms(`Ticket Created Date/Time`) ) ) %>%
+    mutate( Year = year(Ticket_Created) ) %>%
+    group_by( Year , Ticket_Created ) %>%
+    summarise( Daily_Count = n(), .groups = 'drop' )
+
+ggplot( eda3, aes(x=Ticket_Created, y=Daily_Count) ) +
+    geom_jitter(shape=1,size=1) +
+    geom_smooth(method="lm", se=0, aes(colour="lm") ) +
+    geom_smooth(method="loess", se=0, aes(colour="loess") ) +
+    labs(title = "Codes Compliance",
+         subtitle = "Daily tickets") +
+    theme( axis.title.y = element_text(angle = 0, vjust=0.5) )
+```
+<br><br>
+
+Doesn't appear to be. Here we see that "lm" and "loess" both 
+show an increasing trend.  
+
+It appears that the action center is doing quite well. It seems to be
+improving its response time to "Codes Compliance" tickets (downtrend) even as
+the number of tickets increase (uptrend).  
+
+**But is it significant?**  
+<br>
+
+### Hypothesis testing
+
+We'll conduct an ANOVA test which is meant to determine whether there is a 
+statistically significant difference among groups. In this case we'll group
+by years. Other grouping can be considered such as per quarter but then the
+number of groupings and subsequent comparisons may become too large.  
+
+Again, let's group by year and look at the resulting boxplots.
+
+```{r }
+ggplot( eda3, aes(x=as.factor(Year), y=Daily_Count)) +
+    geom_boxplot() +
+    labs(title = "Codes Compliance",
+         subtitle = "Daily tickets") +
+    theme( axis.title.y = element_text(angle = 0, vjust=0.5) )
+```
+<br><br>
+
+Like the daily plots of tickets, the yearly boxplots capture the uptrend.  
+
+Let's develop the hypothesis.  
+
+The null hypothesis - $H_{0}$ : there is no difference among the years.  
+The alternate hypothesis - $H_{a}$ : there is a difference among the years.  
+
+The ANOVA test:
+
+```{r }
+aovOut <- aov( Daily_Count ~ as.factor(Year) , data = eda3 )
+summary( aovOut  )
+aovOut
+```
+<br><br>
+
+We see that the F-value for the effect of "Year" is not near 1 and the P-value
+is less than our considered significance level of 0.05. Thus, a
+significant difference exists among the years and the null hypothesis
+can be rejected. 
+
+However, the ANOVA simply establishes that differences exist, it does not 
+indicate which combination of years are significantly different. A Tukey 
+Honestly 
+Significant Difference (HSD) can compare the years, 
+two at a time, to test the significance of the mean differences.
+
+The Tukey HSD test has a default confidence level of 0.95. 
+
+```{r }
+tt <- TukeyHSD( aovOut )
+print( tt , digits=11 )
+plot( tt )
+```
+<br><br>
+
+The chart is more intuitive. It shows that most horizontal lines do not cross 
+the dashed vertical "0". 
+Those horizontal lines indicate statistically significant two-year 
+combinations. For example,
+the top line (2016-2015) shows significance while the bottom line (2020-2019)
+does not.
+<br><br>
+
+The ANOVA test shows that 10 of the 15 combinations are statistically 
+significant at a significance level of 0.05.  
+
+So what?
+
+**Considering just the "Codes Compliance" issue and the context of COVID, 
+the St. Petersburg [FL] Action Center seems to have improved its 
+"Codes Compliance" 
+ticket resolution time while simultaneously having had a mostly significant
+and meaningful increase in 
+"Codes Compliance" tickets being submitted.**
+
+<br><br>
+
+
+### GitHub
+Related file(s) can be found at <a href="https://github.com/eltownes/USF-LIS4273/tree/master/Module%20FinalProject">Git Me</a>
+<br><br>
+
