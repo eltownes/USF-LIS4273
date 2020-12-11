@@ -196,15 +196,21 @@ the dashed vertical "0".
 Those horizontal lines indicate statistically significant two-year 
 combinations. For example,
 the top line (2016-2015) shows significance while the bottom line (2020-2019)
-does not.
-<br><br>
+does not.  
+
+The chart also shows that the center may have reached a plateau starting
+around 2017. This could be due to the physical realities and
+limitations of being able to respond to issues like "Codes Compliance",
+"Potholes" or "Broken Sidewalks".  
 
 The ANOVA test shows that 10 of the 15 combinations are statistically 
-significant at a significance level of 0.05.  
+significant at a significance level of 0.05.
+<br>
 
-So what?
+**So what?**
 
-**Considering just the "Codes Compliance" issue and the context of COVID, 
+**Considering just the "Codes Compliance" issue and the context of COVID -
+since 2014, 
 the St. Petersburg [FL] Action Center seems to have improved its 
 "Codes Compliance" 
 ticket resolution time while simultaneously having had a mostly significant
