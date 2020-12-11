@@ -23,16 +23,24 @@ stPeteData <- read_csv("C:/Users/ericl/Downloads/St._Petersburg_Action_Center_Da
 
 **Abstract - The dataset is from the St. Petersburg [FL] Action Center which 
 can be found at: 
-https://stat.stpete.org/Improving-Liviability/St-Petersburg-Action-Center-Data/qdms-3kn3 .  
-This analysis uses the file that was downloaded on 10 December 2020. The 
-dataset starts around mid 2014 and it is updated daily.
-There are a number of ways to analyze this rich '144244 x 24' dataset
+https://stat.stpete.org/Improving-Liviability/St-Petersburg-Action-Center-Data/qdms-3kn3.**  
+
+**"This dataset is updated daily and contains a log of citizen requests to the
+Mayor's Action Center dating back to June 2014. These records describe 
+requests for assistance with City services or reported problems, such as 
+potholes, graffiti, broken sidewalks, storm drain issues, traffic 
+signal/sign problems, special pick-up of dumped items, 
+codes violations, etc."**  
+
+**This analysis uses the file that was downloaded on 10 December 2020. There 
+are a number of ways to analyze this rich '144244 x 24' dataset
 including potential options for spatial, imagery, and text analysis.
 This brief analysis will consider a multi-year comparison (ANOVA) for the 
 issue labelled "Codes Compliance." It is one of 31 issues that 
 the Action Center tracks and
-it is also to most common one for St. Petersburg.  
-At least for the issue of
+it is also to most common one for St. Petersburg.**  
+
+**At least for the issue of
 "Codes Compliance", the center is doing quite well.**
 <br><br>
 
