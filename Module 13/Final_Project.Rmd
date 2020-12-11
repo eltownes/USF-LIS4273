@@ -128,6 +128,11 @@ ggplot( eda3, aes(x=Ticket_Created, y=Daily_Count) ) +
 Doesn't appear to be. Here we see that "lm" and "loess" both 
 show an increasing trend.  
 
+Note: one curiosity here is how the center is currently classifying/handling
+tickets. We saw that COVID probably affected the open ticket status but the
+number of tickets isn't diminishing. Difficult to address from a 
+distance, so we'll just proceed for now.  
+
 It appears that the action center is doing quite well. It seems to be
 improving its response time to "Codes Compliance" tickets (downtrend) even as
 the number of tickets increase (uptrend).  
