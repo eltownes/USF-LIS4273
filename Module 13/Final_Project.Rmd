@@ -200,8 +200,7 @@ does not.
 
 The chart also shows that the center may have reached a plateau starting
 around 2017. This could be due to the physical realities and
-limitations of being able to respond to issues like "Codes Compliance",
-"Potholes" or "Broken Sidewalks".  
+limitations of being able to respond to issues like "Codes Compliance".
 
 The ANOVA test shows that 10 of the 15 combinations are statistically 
 significant at a significance level of 0.05.
